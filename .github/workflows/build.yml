@@ -24,12 +24,16 @@ jobs:
     name: "Docker build and push to ECR"
     if: |
       github.ref_name == 'main'
-    needs:
-      - lint_and_test
+    needs: lint_and_test
     runs-on: ubuntu-latest
     steps:
-      - name: Do something
-        run: echo "Do something"
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        run: |
+          docker build -t aws-bootcamp:latest .
   deploy:
     name: "Deploy to AWS ECS"
     runs-on: ubuntu-latest
